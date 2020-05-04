@@ -29,12 +29,40 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
   /**************************************************************************** */
 
+  // invalid url - https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg
+  // valid url - https://cdn.pixabay.com/photo/2015/02/24/15/41/dog-647528_960_720.jpg
   //! END @TODO1
+  app.get("/filteredimage", 
+    async(req, res) => {
+      try {
+        const { image_url } = req.query;
+        
+        if (!image_url) {
+          return res.status(400)
+                  .send(`Image url is required.`);
+        }
+
+        // check image url format.
+        if (!image_url || image_url.indexOf(':') == -1 || image_url.indexOf('/') == -1 || image_url.indexOf('//') == -1) {
+          return res.status(422)
+                  .send(`Specified image url format is incorrect.`);
+        }
+
+        const filterLocalImagePath = await filterImageFromURL(image_url);
+        return res.status(200).sendFile(filterLocalImagePath, function(error) {
+            deleteLocalFiles([ filterLocalImagePath ]);
+        });
+      } catch (error) {
+        return res.status(500)
+              .send(error);
+      }
+    }
+  );
   
   // Root Endpoint
   // Displays a simple message to the user
   app.get( "/", async ( req, res ) => {
-    res.send("try GET /filteredimage?image_url={{}}")
+    res.send("Api supported: GET /filteredimage?image_url={param here}")
   } );
   
 
