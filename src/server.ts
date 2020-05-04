@@ -31,7 +31,6 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
   // invalid url - https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg
   // valid url - https://cdn.pixabay.com/photo/2015/02/24/15/41/dog-647528_960_720.jpg
-  //! END @TODO1
   app.get("/filteredimage", 
     async(req, res) => {
       try {
